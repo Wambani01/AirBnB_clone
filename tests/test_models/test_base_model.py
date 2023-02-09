@@ -2,12 +2,10 @@
 """Test suite for BaseModel module
 """
 
-import sys
 from models.base_model import BaseModel
 import unittest
 import uuid
 from datetime import datetime
-sys.path.append('../')
 
 
 class TestBaseModel(unittest.TestCase):
