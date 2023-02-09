@@ -5,7 +5,6 @@ and from json
 
 import json
 
-
 class FileStorage:
     """defined a class to serialize and
     deserialize json
@@ -31,8 +30,7 @@ class FileStorage:
         """
         my_dict = {}
         for key, value in FileStorage.__objects.items():
-            for i, k in value.items():
-                my_dict[i] = k
+            my_dict[key] = value.to_dict()
 
         with open(FileStorage.__file_path, "w") as f:
            
@@ -41,8 +39,15 @@ class FileStorage:
     def reload(self):
         """deserializes from a json file
         """
+        from models.base_model import BaseModel
+
+        class_dict = {"BaseModel":BaseModel}
+        obj = {}
         try:
             with open(FileStorage.__file_path, "r") as f:
-               FileStorage.__objects = json.load(f)
+                json_data = json.load(f)
+                for key, value in json_data.items():
+                    obj[key] = class_dict[value["__class__"]](**value)
+                FileStorage.__objects = obj
         except FileNotFoundError:
             pass
