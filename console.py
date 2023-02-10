@@ -3,18 +3,20 @@
 """
 
 import cmd
+import json
 from models import storage
 from models.base_model import BaseModel
+
 
 class HBNBCommand(cmd.Cmd):
     """cmd class
     """
     prompt = "(hbnb) "
-    class_dict = {"BaseModel":BaseModel}
+    class_dict = {"BaseModel": BaseModel}
 
     def do_create(self, line):
-        """creates a class instance"""
-        
+        """creates a class instance
+        """
         if not line:
             print("** class name missing **")
         else:
@@ -28,29 +30,19 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, line):
         """prints string repr of an instance
         """
-        my_list = parse(line)
-        if len(my_list) == 0:
-            print("** class name missing **")
-        elif len(my_list) == 1:
-            if my_list[0] not in HBNBCommand.class_dict:
-                print("** class doesn't exist **")
-            else:
-                print("** instance id missing **")
-        elif len(my_list) == 2:
-            if my_list[0] not in HBNBCommand.class_dict:
-                print("** class doesn't exist **")
-            else:
-                obj = storage.all()
-                my_id = my_list[1]
-                my_in = None
-                for value in obj.values():
-                    value = value.to_dict()
-                    if value["id"] == my_id:
-                        my_in = HBNBCommand.class_dict[my_list[0]](**value)
-                if my_in is None:
-                    print("** no instance found **")
-                else:
-                    print(my_in)
+        key = my_obj(line)
+        if key:
+            my_dict = storage.all()
+            print(my_dict[key].to_dict())
+    def do_destroy(self, line):
+        """Deletes an instance based on the class name and id
+        """
+
+        key = my_obj(line)
+        if key:
+            file_dict = storage.all()
+            del file_dict[key]
+            storage.save()
 
     def do_EOF(self, line):
         """Command to end the program
@@ -67,6 +59,26 @@ class HBNBCommand(cmd.Cmd):
 
 def parse(arg):
     return arg.split()
+
+def my_obj(my_line):
+    my_list = parse(my_line)
+    if len(my_list) == 0:
+        print("** class name missing **")
+    elif len(my_list) == 1:                                                                                    
+        if my_list[0] not in HBNBCommand.class_dict:                                                           	
+            print("** class doesn't exist **")                                                                 
+        else:                                                                                                  
+            print("** instance id missing **")                                                                 
+    elif len(my_list) == 2:                                                                                 
+        if my_list[0] not in HBNBCommand.class_dict:                                                           
+            print("** class doesn't exist **")                                                                 
+        else:                                                                                                  
+            key = f"{my_list[0]}.{my_list[1]}"                                                                 
+            file_dict = storage.all()                                                                          
+            if key in file_dict:                                                                               
+                return key                                                                             
+            else:                                                                                              
+                print("** no instance found **")    
 
 
 if __name__ == '__main__':
