@@ -66,23 +66,26 @@ class HBNBCommand(cmd.Cmd):
         """updates an instance
         """
         my_list = parse(line)
-
-        if len(my_list) > 4:
-            print("update <class name> <id> <attribute name> \"<attribute value>\"")
-        elif len(my_list) == 3:
-            print("** value missing **")
-        elif len(my_list) == 2:
-            print("** attribute name missing **")
-        elif len(my_list) == 1:
-            print("** instance id missing **")
-        elif len(my_list) == 0:
-            print("** class name missing **")
-        else:
-            key = my_obj(line)
-            if key:
+        key = my_obj(line)
+        if key:
+            if len(my_list) > 4:
+                print("Usage:update <class name> <id> <attribute name> \"<attribute value>\"")
+            elif len(my_list) == 3:
+                print("** value missing **")
+            elif len(my_list) == 2:
+                print("** attribute name missing **")
+            else:
                 my_dict = storage.all()
                 my_in = my_dict[key]
-                setattr(my_in, my_list[2], my_list[3])
+                val = my_list[3][1:-1]
+                try:
+                    if "." in val:
+                        val = float(val)
+                    else:
+                        val = int(val)
+                except ValueError:
+                    pass
+                setattr(my_in, my_list[2], val)
                 storage.save()
 
     def do_EOF(self, line):
