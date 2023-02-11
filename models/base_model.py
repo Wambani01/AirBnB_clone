@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime, time, date
 from models import storage
 
+
 class BaseModel:
     """a class that defines attributes id,
     created_at, updated_at and methods
