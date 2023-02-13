@@ -48,7 +48,7 @@ class HBNBCommand(cmd.Cmd):
         key = my_obj(line)
         if key:
             my_dict = storage.all()
-            print(my_dict[key].to_dict())
+            print(my_dict[key])
 
     def do_destroy(self, line):
         """Deletes an instance based on the class name and id
