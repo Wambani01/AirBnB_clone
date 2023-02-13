@@ -33,7 +33,7 @@ class FileStorage:
         for key, value in FileStorage.__objects.items():
             my_dict[key] = value.to_dict()
 
-        with open(FileStorage.__file_path, "w") as f:
+        with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
 
             json.dump(my_dict, f)
 
@@ -57,12 +57,11 @@ class FileStorage:
                 "Place": Place,
                 "Review": Review
                 }
-        obj = {}
+        obj = FileStorage.__objects
         try:
-            with open(FileStorage.__file_path, "r") as f:
+            with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
                 json_data = json.load(f)
                 for key, value in json_data.items():
                     obj[key] = class_dict[value["__class__"]](**value)
-                FileStorage.__objects = obj
         except FileNotFoundError:
             pass
