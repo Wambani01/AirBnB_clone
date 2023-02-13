@@ -46,6 +46,7 @@ class BaseModel:
     def to_dict(self):
         """returns a dictionary repr of the instance
         """
+
         my_dict = self.__dict__.copy()
         my_dict.update({
             "__class__": self.__class__.__name__,
